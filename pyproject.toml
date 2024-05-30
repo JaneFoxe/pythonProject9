@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "pythonproject9"
+version = "0.1.0"
+description = ""
+authors = ["Nastya Foxe <Kukusiki2204@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pillow = "^10.3.0"
+django = "^5.0.6"
+psycopg-binary = "^3.1.19"
+djangorestframework = "^3.15.1"
+psycopg = "^3.1.19"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
