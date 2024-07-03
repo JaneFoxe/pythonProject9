@@ -1,12 +1,17 @@
 from django.db import models
 
-from users.models import NULL_PARAM
+from users.models import NULL_PARAM, User
 
 
 class Course(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название")
-    preview = models.ImageField(upload_to='materials/', verbose_name='Изображение', **NULL_PARAM)
+    preview = models.ImageField(
+        upload_to="materials/", verbose_name="Изображение", **NULL_PARAM
+    )
     description = models.TextField(verbose_name="Описание", blank=True)
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, **NULL_PARAM, verbose_name="Владелец"
+    )
 
     def __str__(self):
         # Строковое отображение объекта
@@ -20,14 +25,19 @@ class Course(models.Model):
 class Lesson(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название")
     description = models.TextField(verbose_name="Описание", blank=True)
-    preview = models.ImageField(upload_to='materials/', verbose_name='Изображение', **NULL_PARAM)
-    slug = models.URLField(verbose_name='Ссылка', **NULL_PARAM)
+    preview = models.ImageField(
+        upload_to="materials/", verbose_name="Изображение", **NULL_PARAM
+    )
+    slug = models.URLField(verbose_name="Ссылка", **NULL_PARAM)
     course = models.ForeignKey(
         "materials.Course",
         on_delete=models.CASCADE,
         verbose_name="Курс",
         related_name="lessons",
         **NULL_PARAM,
+    )
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, **NULL_PARAM, verbose_name="Владелец"
     )
 
     def __str__(self):
