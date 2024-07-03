@@ -7,13 +7,13 @@ from users.models import Payments
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = '__all__'
+        fields = "__all__"
 
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = '__all__'
+        fields = "__all__"
 
 
 class CourseDetailSerializer(serializers.ModelSerializer):
@@ -25,10 +25,10 @@ class CourseDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['name', 'preview', 'description', 'lessons_count', 'lessons']
+        fields = ["name", "preview", "description", "lessons_count", "lessons"]
 
 
 class PaymentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payments
-        fields = '__all__'
+        fields = "__all__"
