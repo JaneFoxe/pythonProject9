@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from materials.models import Course, Lesson
+from materials.models import Course, Lesson, Subscription
+from materials.validators import LinkValidator
 from users.models import Payments
 
 
@@ -14,6 +15,7 @@ class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = "__all__"
+        validators = [LinkValidator(field='slug')]
 
 
 class CourseDetailSerializer(serializers.ModelSerializer):
@@ -31,4 +33,12 @@ class CourseDetailSerializer(serializers.ModelSerializer):
 class PaymentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payments
+        fields = "__all__"
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    """Класс сериализатора для модели Subscription"""
+
+    class Meta:
+        model = Subscription
         fields = "__all__"
