@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from materials.models import Course, Lesson
+from materials.models import Course, Lesson, Subscription
 from users.models import User
 
 
@@ -87,3 +87,32 @@ class MaterialsTestCase(APITestCase):
         self.assertEqual(
             data, result
         )
+
+
+class SubscriptionCreateAPIViewTests(APITestCase):
+    def setUp(self) -> None:
+        self.user = User.objects.create(email="admin1@admin.ru")
+        self.client.force_authenticate(user=self.user)
+        self.course = Course.objects.create(name="Мемология", description="хорошо")
+        self.lesson = Lesson.objects.create(name="Джимми", course=self.course, owner=self.user)
+        self.url = reverse("materials:subscriptions")
+
+    def test_create_subscription(self):
+        response = self.client.post(self.url, {'course': self.course.id}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['message'], 'Подписка успешно создана')
+        self.assertTrue(Subscription.objects.filter(user=self.user, course=self.course).exists())
+
+    def test_delete_subscription(self):
+        Subscription.objects.create(user=self.user, course=self.course)
+        response = self.client.post(self.url, {'course': self.course.id}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['message'], 'Подписка успешно удалена')
+        self.assertFalse(Subscription.objects.filter(user=self.user, course=self.course).exists())
+
+    def test_create_subscription_without_authentication(self):
+        self.client.logout()
+        response = self.client.post(self.url, {'course': self.course.id}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
