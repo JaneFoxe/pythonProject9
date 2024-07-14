@@ -24,7 +24,9 @@ class Payments(models.Model):
         ("bank", "Банковская карта"),
     )
 
-    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
+    user = models.ForeignKey("users.User", on_delete=models.SET_NULL,
+                             **NULL_PARAM,
+                             verbose_name="Пользователь", )
     payment_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата платежа")
     paid_course = models.ForeignKey(
         "materials.Course", on_delete=models.CASCADE, **NULL_PARAM
@@ -32,15 +34,27 @@ class Payments(models.Model):
     paid_lesson = models.ForeignKey(
         "materials.Lesson", on_delete=models.CASCADE, **NULL_PARAM
     )
-    total = models.FloatField(verbose_name="Сумма платежа")
+    total = models.PositiveIntegerField(verbose_name="Сумма платежа")
     payment_method = models.CharField(
         max_length=10,
         choices=PAYMENT_METHODS,
         default="bank",
         verbose_name="Способ оплаты",
     )
-
+    link = models.URLField(
+        max_length=400,
+        **NULL_PARAM,
+        verbose_name="Ссылка на оплату"
+    )
+    session_id = models.CharField(
+        max_length=255,
+        **NULL_PARAM,
+        verbose_name="id сессии"
+    )
     class Meta:
         verbose_name = "Платеж"
         verbose_name_plural = "Платежи"
         ordering = ("-payment_date",)
+
+    def __str__(self):
+        return self.total
